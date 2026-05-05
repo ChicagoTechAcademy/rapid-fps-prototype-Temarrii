@@ -74,6 +74,24 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor
     {
         OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
     }
-    Destroy();
+
+   // Disable the Projectile Movement Component
+
+    if (ProjectileMovementComponent)
+    {
+        ProjectileMovementComponent->StopMovementImmediately(); ProjectileMovementComponent->SetActive(false);
+    }
+
+    // Enable physics simulation on the collision component
+
+    if (CollisionComponent)
+    {
+        CollisionComponent->SetSimulatePhysics(true);
+
+        // Apply the current velocity as an impulse to maintain momentum
+        CollisionComponent->AddImpulse(ProjectileMovementComponent->Velocity);
+    }
+    //Destroy();
+
 }
 
